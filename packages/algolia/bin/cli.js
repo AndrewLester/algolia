@@ -89,7 +89,11 @@ prettyCLI.command({
                 params.page = argv.page;
             }
 
-            context.posts = await ghost.posts.browse(params);
+            const allPosts = await ghost.posts.browse(params);
+            const publishedPosts = allPosts.filter(
+                (post) => post.status === 'published'
+            );
+            context.posts = publishedPosts;
 
             ui.log.info(`Done fetching posts in ${Date.now() - timer}ms.`);
         } catch (error) {
@@ -153,12 +157,6 @@ prettyCLI.command({
             );
 
             timer = Date.now();
-            console.log(
-                context.fragments.find(
-                    (fragment) =>
-                        fragment.objectID === '6103f40a28407a003b8808ad_0'
-                )?.slug
-            );
             ui.log.info('Saving fragments to Algolia...');
 
             await index.save(context.fragments);
