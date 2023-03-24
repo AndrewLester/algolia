@@ -159,6 +159,7 @@ prettyCLI.command({
             timer = Date.now();
             ui.log.info('Saving fragments to Algolia...');
 
+            await index.clearObjects();
             await index.save(context.fragments);
 
             ui.log.ok(
